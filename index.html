@@ -3,58 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guest Intelligence System</title>
+    <title>Guest Manager Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="logo">GUEST.<span>IO</span></div>
-            <nav>
-                <div class="stat-item">
-                    <span>Total Convidados</span>
-                    <strong id="total-count">0</strong>
-                </div>
-                <div class="stat-item">
-                    <span>Iniciais com "A"</span>
-                    <strong id="stat-a">0</strong>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="content">
-            <header class="top-bar">
-                <h1>Painel de Gestão de Convidados</h1>
-                <div class="user-profile">Dev Portfólio</div>
-            </header>
-
-            <div class="grid-layout">
-                <section class="glass-card">
-                    <div class="card-header">
-                        <i data-lucide="type"></i>
-                        <h3>Normalização (Uppercase)</h3>
-                    </div>
-                    <ul id="list-upper" class="custom-scroll"></ul>
-                </section>
-
-                <section class="glass-card">
-                    <div class="card-header">
-                        <i data-lucide="user-minus"></i>
-                        <h3>Nomes Curtos (≤ 5)</h3>
-                    </div>
-                    <ul id="list-short" class="custom-scroll"></ul>
-                </section>
-
-                <section class="glass-card">
-                    <div class="card-header">
-                        <i data-lucide="user-plus"></i>
-                        <h3>Nomes Longos (> 5)</h3>
-                    </div>
-                    <ul id="list-long" class="custom-scroll"></ul>
-                </section>
+    <div class="app">
+        <header>
+            <h1>Guest Manager <span>System</span></h1>
+            <div class="stats-bar">
+                <p>Total: <span id="total-count">0</span></p>
+                <p>Começam com "A": <span id="count-a">0</span></p>
             </div>
+            <div class="input-group">
+                <input type="text" id="guest-input" placeholder="Digite um nome...">
+                <button onclick="addGuest()">Adicionar</button>
+            </div>
+        </header>
+
+        <main class="grid-container">
+            <section class="card">
+                <h2>Uppercase</h2>
+                <ul id="list-upper" class="list"></ul>
+            </section>
+
+            <section class="card">
+                <h2>Nomes Curtos (≤ 5)</h2>
+                <ul id="list-short" class="list"></ul>
+            </section>
+
+            <section class="card">
+                <h2>Nomes Longos (> 5)</h2>
+                <ul id="list-long" class="list"></ul>
+            </section>
         </main>
     </div>
     <script src="script.js"></script>
