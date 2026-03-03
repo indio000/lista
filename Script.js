@@ -1,46 +1,56 @@
-const guests = ["Adriano", "Beatriz", "Ana", "Caio", "Alexandre", "Wagner", "Amanda", "Zoe"];
+// Database Mock
+const GUESTS_DB = ["Alice", "Bernardo", "Arthur", "Caio", "Amanda", "Dandara", "Enzo", "Augusto", "Valentina", "Alex"];
 
-// Helper: Função Range estilo Python
-const range = (size) => [...Array(size).keys()];
+// Utilitário Range (Gerador)
+const range = (n) => Array.from({ length: n }, (_, i) => i);
 
-const initApp = () => {
-    const ui = {
-        upper: document.getElementById('list-upper'),
-        short: document.getElementById('list-short'),
-        long: document.getElementById('list-long'),
-        stats: document.querySelector('#stats-a strong'),
-        badge: document.getElementById('badge-count')
-    };
+const App = {
+    init() {
+        lucide.createIcons(); // Inicia os ícones
+        this.render();
+    },
 
-    let countA = 0;
-    ui.badge.textContent = guests.length;
+    // Lógica de Processamento
+    processData() {
+        return {
+            allUpper: GUESTS_DB.map(name => name.toUpperCase()),
+            shortNames: GUESTS_DB.filter(name => name.length <= 5),
+            longNames: GUESTS_DB.filter(name => name.length > 5),
+            countA: GUESTS_DB.reduce((acc, name) => 
+                name.toLowerCase().startsWith('a') ? acc + 1 : acc, 0)
+        };
+    },
 
-    // Usando range para iterar sobre os índices
-    range(guests.length).forEach(i => {
-        const name = guests[i];
+    render() {
+        const data = this.processData();
+        const indices = range(GUESTS_DB.length);
 
-        // 1. Lógica da Letra A
-        if (name.toLowerCase().startsWith('a')) countA++;
-
-        // 2. Criar Elementos
-        const createLi = (content) => {
-            const li = document.createElement('li');
-            li.textContent = content;
-            return li;
+        // Referências DOM
+        const containers = {
+            upper: document.getElementById('list-upper'),
+            short: document.getElementById('list-short'),
+            long: document.getElementById('list-long')
         };
 
-        // Popular Lista Maiúscula
-        ui.upper.appendChild(createLi(name.toUpperCase()));
+        // Renderização com o loop range() solicitado
+        indices.forEach(i => {
+            const name = GUESTS_DB[i];
+            
+            // 1. Lista Maiúscula
+            containers.upper.innerHTML += `<li>${name.toUpperCase()}</li>`;
+            
+            // 2 e 3. Listas Separadas
+            if (name.length > 5) {
+                containers.long.innerHTML += `<li>${name} <small>(${name.length} chars)</small></li>`;
+            } else {
+                containers.short.innerHTML += `<li>${name}</li>`;
+            }
+        });
 
-        // Popular Listas por tamanho
-        if (name.length > 5) {
-            ui.long.appendChild(createLi(name));
-        } else {
-            ui.short.appendChild(createLi(name));
-        }
-    });
-
-    ui.stats.textContent = countA;
+        // Atualização de Stats
+        document.getElementById('stat-a').textContent = data.countA;
+        document.getElementById('total-count').textContent = GUESTS_DB.length;
+    }
 };
 
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', () => App.init());
