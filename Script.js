@@ -1,41 +1,46 @@
-// 1. Lista original de convidados
-const convidados = ["Alice", "Bruno", "Amanda", "Carlos", "Beatriz", "Augusto", "Daniela", "Leonardo"];
+const guests = ["Adriano", "Beatriz", "Ana", "Caio", "Alexandre", "Wagner", "Amanda", "Zoe"];
 
-// Referências do DOM
-const ulMaiuscula = document.getElementById('lista-maiuscula');
-const ulLongos = document.getElementById('lista-longos');
-const ulCurtos = document.getElementById('lista-curtos');
-const displayContador = document.getElementById('contador-a');
+// Helper: Função Range estilo Python
+const range = (size) => [...Array(size).keys()];
 
-// Função auxiliar que simula o range() para iterar no loop
-const range = (start, end) => Array.from({ length: end - start }, (_, k) => k + start);
+const initApp = () => {
+    const ui = {
+        upper: document.getElementById('list-upper'),
+        short: document.getElementById('list-short'),
+        long: document.getElementById('list-long'),
+        stats: document.querySelector('#stats-a strong'),
+        badge: document.getElementById('badge-count')
+    };
 
-let contadorA = 0;
+    let countA = 0;
+    ui.badge.textContent = guests.length;
 
-// Loop principal usando o range de índices da lista
-for (let i of range(0, convidados.length)) {
-    let nome = convidados[i];
+    // Usando range para iterar sobre os índices
+    range(guests.length).forEach(i => {
+        const name = guests[i];
 
-    // Contagem de nomes que começam com 'A'
-    if (nome.toUpperCase().startsWith('A')) {
-        contadorA++;
-    }
+        // 1. Lógica da Letra A
+        if (name.toLowerCase().startsWith('a')) countA++;
 
-    // Criar elemento de lista (LI) para a lista de Maiúsculos
-    let li = document.createElement('li');
-    li.textContent = nome.toUpperCase();
-    ulMaiuscula.appendChild(li);
+        // 2. Criar Elementos
+        const createLi = (content) => {
+            const li = document.createElement('li');
+            li.textContent = content;
+            return li;
+        };
 
-    // Lógica para separar em listas de acordo com o tamanho
-    let liTamanho = document.createElement('li');
-    liTamanho.textContent = nome;
+        // Popular Lista Maiúscula
+        ui.upper.appendChild(createLi(name.toUpperCase()));
 
-    if (nome.length > 5) {
-        ulLongos.appendChild(liTamanho);
-    } else {
-        ulCurtos.appendChild(liTamanho);
-    }
-}
+        // Popular Listas por tamanho
+        if (name.length > 5) {
+            ui.long.appendChild(createLi(name));
+        } else {
+            ui.short.appendChild(createLi(name));
+        }
+    });
 
-// Exibir o total de nomes com A
-displayContador.textContent = `Total de nomes que começam com 'A': ${contadorA}`;
+    ui.stats.textContent = countA;
+};
+
+document.addEventListener('DOMContentLoaded', initApp);
