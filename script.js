@@ -1,56 +1,61 @@
-// Database Mock
-const GUESTS_DB = ["Alice", "Bernardo", "Arthur", "Caio", "Amanda", "Dandara", "Enzo", "Augusto", "Valentina", "Alex"];
+// Lista inicial de dados
+let guests = ["Alice", "Bruno", "Amanda", "Carlos", "Beatriz"];
 
-// Utilitário Range (Gerador)
-const range = (n) => Array.from({ length: n }, (_, i) => i);
+// Função Range personalizada (estilo Python)
+const range = (start, end) => Array.from({ length: end - start }, (_, i) => start + i);
 
-const App = {
-    init() {
-        lucide.createIcons(); // Inicia os ícones
-        this.render();
-    },
+function updateUI() {
+    const listUpper = document.getElementById('list-upper');
+    const listShort = document.getElementById('list-short');
+    const listLong = document.getElementById('list-long');
+    const countA = document.getElementById('count-a');
+    const totalCount = document.getElementById('total-count');
 
-    // Lógica de Processamento
-    processData() {
-        return {
-            allUpper: GUESTS_DB.map(name => name.toUpperCase()),
-            shortNames: GUESTS_DB.filter(name => name.length <= 5),
-            longNames: GUESTS_DB.filter(name => name.length > 5),
-            countA: GUESTS_DB.reduce((acc, name) => 
-                name.toLowerCase().startsWith('a') ? acc + 1 : acc, 0)
-        };
-    },
+    // Limpar listas antes de renderizar
+    listUpper.innerHTML = "";
+    listShort.innerHTML = "";
+    listLong.innerHTML = "";
 
-    render() {
-        const data = this.processData();
-        const indices = range(GUESTS_DB.length);
+    let aCounter = 0;
 
-        // Referências DOM
-        const containers = {
-            upper: document.getElementById('list-upper'),
-            short: document.getElementById('list-short'),
-            long: document.getElementById('list-long')
-        };
+    // Uso do loop com range() para percorrer os índices
+    const indices = range(0, guests.length);
+    
+    indices.forEach(index => {
+        const name = guests[index];
 
-        // Renderização com o loop range() solicitado
-        indices.forEach(i => {
-            const name = GUESTS_DB[i];
-            
-            // 1. Lista Maiúscula
-            containers.upper.innerHTML += `<li>${name.toUpperCase()}</li>`;
-            
-            // 2 e 3. Listas Separadas
-            if (name.length > 5) {
-                containers.long.innerHTML += `<li>${name} <small>(${name.length} chars)</small></li>`;
-            } else {
-                containers.short.innerHTML += `<li>${name}</li>`;
-            }
-        });
+        // 1. Contagem de nomes com 'A'
+        if (name.toUpperCase().startsWith('A')) aCounter++;
 
-        // Atualização de Stats
-        document.getElementById('stat-a').textContent = data.countA;
-        document.getElementById('total-count').textContent = GUESTS_DB.length;
+        // 2. Criar elemento para Lista Maiúscula
+        const liUpper = document.createElement('li');
+        liUpper.textContent = name.toUpperCase();
+        listUpper.appendChild(liUpper);
+
+        // 3. Separar por tamanho (> 5 letras)
+        const liGeneric = document.createElement('li');
+        liGeneric.textContent = name;
+
+        if (name.length > 5) {
+            listLong.appendChild(liGeneric);
+        } else {
+            listShort.appendChild(liGeneric);
+        }
+    });
+
+    // Atualizar estatísticas
+    countA.textContent = aCounter;
+    totalCount.textContent = guests.length;
+}
+
+function addGuest() {
+    const input = document.getElementById('guest-input');
+    if (input.value.trim() !== "") {
+        guests.push(input.value.trim());
+        input.value = "";
+        updateUI();
     }
-};
+}
 
-document.addEventListener('DOMContentLoaded', () => App.init());
+// Inicializar aplicação
+document.addEventListener('DOMContentLoaded', updateUI);
