@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Convidados</title>
+    <title>Guest List Pro | Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <main class="dashboard">
+        <header>
+            <h1>Guest Manager <span id="badge-count">0</span></h1>
+            <p id="stats-a">Nomes com "A": <strong>0</strong></p>
+        </header>
 
-    <h1>Painel de Controle de Convidados</h1>
-    <p id="contador-a"></p>
+        <div class="grid-container">
+            <section class="card">
+                <h3>Uppercase List</h3>
+                <ul id="list-upper" class="styled-list"></ul>
+            </section>
 
-    <div class="container-listas">
-        <section>
-            <h2>1. Todos (Maiúsculos)</h2>
-            <ul id="lista-maiuscula"></ul>
-        </section>
+            <section class="card">
+                <h3>Short Names (≤ 5)</h3>
+                <ul id="list-short" class="styled-list"></ul>
+            </section>
 
-        <section>
-            <h2>2. Nomes Curtos</h2>
-            <ul id="lista-curtos"></ul>
-        </section>
-
-        <section>
-            <h2>3. Nomes Longos (> 5 letras)</h2>
-            <ul id="lista-longos"></ul>
-        </section>
-    </div>
-
+            <section class="card">
+                <h3>Long Names (> 5)</h3>
+                <ul id="list-long" class="styled-list"></ul>
+            </section>
+        </div>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
