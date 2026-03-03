@@ -1,81 +1,61 @@
-let guests = ["Alice Silva", "Bruno Costa", "Amanda Lira", "Caio Souza"];
+// Lista inicial de dados
+let guests = ["Alice", "Bruno", "Amanda", "Carlos", "Beatriz"];
 
-// Função Range (Requisito)
-const range = (n) => Array.from({ length: n }, (_, i) => i);
+// Função Range personalizada (estilo Python)
+const range = (start, end) => Array.from({ length: end - start }, (_, i) => start + i);
 
-const App = {
-    init() {
-        lucide.createIcons();
-        this.bindEvents();
-        this.render();
-    },
+function updateUI() {
+    const listUpper = document.getElementById('list-upper');
+    const listShort = document.getElementById('list-short');
+    const listLong = document.getElementById('list-long');
+    const countA = document.getElementById('count-a');
+    const totalCount = document.getElementById('total-count');
 
-    bindEvents() {
-        document.getElementById('add-btn').onclick = () => this.addGuest();
-        document.getElementById('guest-input').onkeypress = (e) => {
-            if (e.key === 'Enter') this.addGuest();
-        };
-    },
+    // Limpar listas antes de renderizar
+    listUpper.innerHTML = "";
+    listShort.innerHTML = "";
+    listLong.innerHTML = "";
 
-    addGuest() {
-        const input = document.getElementById('guest-input');
-        if (input.value.trim()) {
-            guests.push(input.value.trim());
-            input.value = "";
-            this.render();
+    let aCounter = 0;
+
+    // Uso do loop com range() para percorrer os índices
+    const indices = range(0, guests.length);
+    
+    indices.forEach(index => {
+        const name = guests[index];
+
+        // 1. Contagem de nomes com 'A'
+        if (name.toUpperCase().startsWith('A')) aCounter++;
+
+        // 2. Criar elemento para Lista Maiúscula
+        const liUpper = document.createElement('li');
+        liUpper.textContent = name.toUpperCase();
+        listUpper.appendChild(liUpper);
+
+        // 3. Separar por tamanho (> 5 letras)
+        const liGeneric = document.createElement('li');
+        liGeneric.textContent = name;
+
+        if (name.length > 5) {
+            listLong.appendChild(liGeneric);
+        } else {
+            listShort.appendChild(liGeneric);
         }
-    },
+    });
 
-    deleteGuest(index) {
-        guests.splice(index, 1);
-        this.render();
-    },
+    // Atualizar estatísticas
+    countA.textContent = aCounter;
+    totalCount.textContent = guests.length;
+}
 
-    render() {
-        const uis = {
-            upper: document.getElementById('list-upper'),
-            short: document.getElementById('list-short'),
-            long: document.getElementById('list-long'),
-            total: document.getElementById('total-count'),
-            countA: document.getElementById('count-a')
-        };
-
-        // Limpa tudo
-        Object.values(uis).forEach(el => { if(el.tagName === 'UL') el.innerHTML = "" });
-
-        let aCounter = 0;
-
-        // Loop usando range() nos índices
-        range(guests.length).forEach(i => {
-            const name = guests[i];
-            
-            if (name.toLowerCase().startsWith('a')) aCounter++;
-
-            // Template de Item
-            const createItem = (content, isUpper = false) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${isUpper ? content.toUpperCase() : content}</span>
-                    <button class="delete-btn" onclick="App.deleteGuest(${i})">
-                        <i data-lucide="trash-2" style="width:16px"></i>
-                    </button>
-                `;
-                return li;
-            };
-
-            uis.upper.appendChild(createItem(name, true));
-            
-            if (name.length > 5) {
-                uis.long.appendChild(createItem(name));
-            } else {
-                uis.short.appendChild(createItem(name));
-            }
-        });
-
-        uis.total.textContent = guests.length;
-        uis.countA.textContent = aCounter;
-        lucide.createIcons(); // Recarrega os ícones dos novos botões
+function addGuest() {
+    const input = document.getElementById('guest-input');
+    if (input.value.trim() !== "") {
+        guests.push(input.value.trim());
+        input.value = "";
+        updateUI();
     }
-};
+}
 
-App.init();
+// Inicializar aplicação
+document.addEventListener('DOMContentLoaded', updateUI);
