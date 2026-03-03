@@ -1,42 +1,61 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guest Manager Pro</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app">
-        <header>
-            <h1>Guest Manager <span>System</span></h1>
-            <div class="stats-bar">
-                <p>Total: <span id="total-count">0</span></p>
-                <p>Começam com "A": <span id="count-a">0</span></p>
-            </div>
-            <div class="input-group">
-                <input type="text" id="guest-input" placeholder="Digite um nome...">
-                <button onclick="addGuest()">Adicionar</button>
-            </div>
-        </header>
+// Lista inicial de dados
+let guests = ["Alice", "Bruno", "Amanda", "Carlos", "Beatriz"];
 
-        <main class="grid-container">
-            <section class="card">
-                <h2>Uppercase</h2>
-                <ul id="list-upper" class="list"></ul>
-            </section>
+// Função Range personalizada (estilo Python)
+const range = (start, end) => Array.from({ length: end - start }, (_, i) => start + i);
 
-            <section class="card">
-                <h2>Nomes Curtos (≤ 5)</h2>
-                <ul id="list-short" class="list"></ul>
-            </section>
+function updateUI() {
+    const listUpper = document.getElementById('list-upper');
+    const listShort = document.getElementById('list-short');
+    const listLong = document.getElementById('list-long');
+    const countA = document.getElementById('count-a');
+    const totalCount = document.getElementById('total-count');
 
-            <section class="card">
-                <h2>Nomes Longos (> 5)</h2>
-                <ul id="list-long" class="list"></ul>
-            </section>
-        </main>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    // Limpar listas antes de renderizar
+    listUpper.innerHTML = "";
+    listShort.innerHTML = "";
+    listLong.innerHTML = "";
+
+    let aCounter = 0;
+
+    // Uso do loop com range() para percorrer os índices
+    const indices = range(0, guests.length);
+    
+    indices.forEach(index => {
+        const name = guests[index];
+
+        // 1. Contagem de nomes com 'A'
+        if (name.toUpperCase().startsWith('A')) aCounter++;
+
+        // 2. Criar elemento para Lista Maiúscula
+        const liUpper = document.createElement('li');
+        liUpper.textContent = name.toUpperCase();
+        listUpper.appendChild(liUpper);
+
+        // 3. Separar por tamanho (> 5 letras)
+        const liGeneric = document.createElement('li');
+        liGeneric.textContent = name;
+
+        if (name.length > 5) {
+            listLong.appendChild(liGeneric);
+        } else {
+            listShort.appendChild(liGeneric);
+        }
+    });
+
+    // Atualizar estatísticas
+    countA.textContent = aCounter;
+    totalCount.textContent = guests.length;
+}
+
+function addGuest() {
+    const input = document.getElementById('guest-input');
+    if (input.value.trim() !== "") {
+        guests.push(input.value.trim());
+        input.value = "";
+        updateUI();
+    }
+}
+
+// Inicializar aplicação
+document.addEventListener('DOMContentLoaded', updateUI);
